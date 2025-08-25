@@ -1,0 +1,67 @@
+services:
+  wings:
+    image: ghcr.io/pterodactyl/wings:latest
+    restart: always
+    ports: ["2022:2022"]
+    networks:
+      - wings0
+      - dokploy-network
+    tty: true
+    environment:
+      TZ: "UTC"
+      WINGS_UID: 988
+      WINGS_GID: 988
+      WINGS_USERNAME: pterodactyl
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/lib/docker/containers/:/var/lib/docker/containers/"
+      - "/etc/pterodactyl/:/etc/pterodactyl/"
+      - "/var/lib/pterodactyl/:/var/lib/pterodactyl/"
+      - "/var/log/pterodactyl/:/var/log/pterodactyl/"
+      - "/tmp/pterodactyl/:/tmp/pterodactyl/"
+      - "/etc/ssl/certs:/etc/ssl/certs:ro"
+      # you may need /srv/daemon-data if you are upgrading from an old daemon
+      #- "/srv/daemon-data/:/srv/daemon-data/"
+      # Required for ssl if you use let's encrypt. uncomment to use.
+      #- "/etc/letsencrypt/:/etc/letsencrypt/"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      
+      # WebSocket route (/api/servers/{serverid}/ws)
+      - traefik.http.routers.ws-router.rule=Host(`node1.yiffiy.pet`) && PathRegexp(`^/api/servers/{serverid:.*}/ws$`)
+      - traefik.http.routers.ws-router.entrypoints=web
+      - traefik.http.routers.ws-router.service=ws-service
+      - traefik.http.routers.ws-router.priority=100
+      - traefik.http.services.ws-service.loadbalancer.server.port=443
+      - traefik.http.routers.ws-router.middlewares=ws-headers
+      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.X-Forwarded-For=true
+      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.X-Real-IP=$remote_addr
+      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.Upgrade=$http_upgrade
+      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.Connection="upgrade"
+      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.Host=$host
+      
+      # General route (/)
+      - traefik.http.routers.root-router.rule=Host(`node1.yiffiy.pet`)
+      - traefik.http.routers.root-router.entrypoints=web
+      - traefik.http.routers.root-router.service=root-service
+      - traefik.http.routers.root-router.priority=10
+      - traefik.http.services.root-service.loadbalancer.server.port=443
+      - traefik.http.routers.root-router.middlewares=root-headers
+      - traefik.http.middlewares.root-headers.headers.customrequestheaders.X-Forwarded-For=true
+      - traefik.http.middlewares.root-headers.headers.customrequestheaders.X-Real-IP=$remote_addr
+      - traefik.http.middlewares.root-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.root-headers.headers.customrequestheaders.Host=$host
+      
+networks:
+  wings0:
+    name: wings0
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.21.0.0/16"
+    driver_opts:
+      com.docker.network.bridge.name: wings0
+  dokploy-network:
+    external: true
