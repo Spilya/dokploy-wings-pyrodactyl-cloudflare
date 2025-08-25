@@ -29,30 +29,30 @@ services:
       - traefik.docker.network=dokploy-network
       
       # WebSocket route (/api/servers/{serverid}/ws)
-      - traefik.http.routers.ws-router.rule=Host(`node1.yiffiy.pet`) && PathRegexp(`^/api/servers/{serverid:.*}/ws$`)
-      - traefik.http.routers.ws-router.entrypoints=web
-      - traefik.http.routers.ws-router.service=ws-service
-      - traefik.http.routers.ws-router.priority=100
-      - traefik.http.services.ws-service.loadbalancer.server.port=443
-      - traefik.http.routers.ws-router.middlewares=ws-headers
-      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.X-Forwarded-For=true
-      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.X-Real-IP=$remote_addr
-      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.X-Forwarded-Proto=https
-      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.Upgrade=$http_upgrade
-      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.Connection="upgrade"
-      - traefik.http.middlewares.ws-headers.headers.customrequestheaders.Host=$host
+      - traefik.http.routers.ws-router-XXXXXX.rule=Host(`node2.yiffiy.pet`) && PathRegexp(`^/api/servers/{serverid:.*}/ws$`)
+      - traefik.http.routers.ws-router-XXXXXX.entrypoints=web
+      - traefik.http.routers.ws-router-XXXXXX.service=ws-service-XXXXXX
+      - traefik.http.routers.ws-router-XXXXXX.priority=100
+      - traefik.http.services.ws-service-XXXXXX.loadbalancer.server.port=443
+      - traefik.http.routers.ws-router-XXXXXX.middlewares=ws-headers-XXXXXX
+      - traefik.http.middlewares.ws-headers-XXXXXX.headers.customrequestheaders.X-Forwarded-For=true
+      - traefik.http.middlewares.ws-headers-XXXXXX.headers.customrequestheaders.X-Real-IP=$remote_addr
+      - traefik.http.middlewares.ws-headers-XXXXXX.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.ws-headers-XXXXXX.headers.customrequestheaders.Upgrade=$http_upgrade
+      - traefik.http.middlewares.ws-headers-XXXXXX.headers.customrequestheaders.Connection="upgrade"
+      - traefik.http.middlewares.ws-headers-XXXXXX.headers.customrequestheaders.Host=$host
       
       # General route (/)
-      - traefik.http.routers.root-router.rule=Host(`node1.yiffiy.pet`)
-      - traefik.http.routers.root-router.entrypoints=web
-      - traefik.http.routers.root-router.service=root-service
-      - traefik.http.routers.root-router.priority=10
-      - traefik.http.services.root-service.loadbalancer.server.port=443
-      - traefik.http.routers.root-router.middlewares=root-headers
-      - traefik.http.middlewares.root-headers.headers.customrequestheaders.X-Forwarded-For=true
-      - traefik.http.middlewares.root-headers.headers.customrequestheaders.X-Real-IP=$remote_addr
-      - traefik.http.middlewares.root-headers.headers.customrequestheaders.X-Forwarded-Proto=https
-      - traefik.http.middlewares.root-headers.headers.customrequestheaders.Host=$host
+      - traefik.http.routers.root-router-XXXXXX.rule=Host(`node2.yiffiy.pet`)
+      - traefik.http.routers.root-router-XXXXXX.entrypoints=web
+      - traefik.http.routers.root-router-XXXXXX.service=root-service-XXXXXX
+      - traefik.http.routers.root-router-XXXXXX.priority=10
+      - traefik.http.services.root-service-XXXXXX.loadbalancer.server.port=443
+      - traefik.http.routers.root-router-XXXXXX.middlewares=root-headers-XXXXXX
+      - traefik.http.middlewares.root-headers-XXXXXX.headers.customrequestheaders.X-Forwarded-For=true
+      - traefik.http.middlewares.root-headers-XXXXXX.headers.customrequestheaders.X-Real-IP=$remote_addr
+      - traefik.http.middlewares.root-headers-XXXXXX.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.root-headers-XXXXXX.headers.customrequestheaders.Host=$host
       
 networks:
   wings0:

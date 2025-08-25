@@ -4,7 +4,8 @@
 1. Устанавливаем Pyrodactyl из темплейтов dokploy;
 2. Открываем домен на 80 порт, запись проксируется;
 3. Создаём композ, из файла wings-docker-compose.yml;
-4. Настраиваем ноду из панели Pyrodactyl:
+4. Заменить XXXXXX на что то случайное;
+5. Настраиваем ноду из панели Pyrodactyl:
 - Communicate Over SSL - Use SSL Connection;
 - Behind Proxy - Behind Proxy;
 - Daemon Port = 443.
